@@ -7,7 +7,7 @@ name: Release
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
 
 permissions:
   contents: write
@@ -52,9 +52,9 @@ jobs:
           - platform: macos-latest
             args: --target x86_64-apple-darwin
           - platform: ubuntu-22.04
-            args: ""
+            args: ''
           - platform: windows-latest
-            args: ""
+            args: ''
 
     runs-on: ${{ matrix.platform }}
     steps:
@@ -103,7 +103,7 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: "Gister ${{ github.ref_name }}"
+          releaseName: 'Gister ${{ github.ref_name }}'
           releaseBody: ${{ needs.changelog.outputs.notes }}
           releaseDraft: true
           args: ${{ matrix.args }}

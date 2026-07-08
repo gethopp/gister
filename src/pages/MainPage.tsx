@@ -8,13 +8,7 @@ import { GistCommandPalette } from '../components/GistCommandPalette';
 import { GistDetail } from '../components/GistDetail';
 import { GistListPanel } from '../components/GistListPanel';
 import type { AccountFooterProps } from '../components/AccountFooter';
-import {
-  db,
-  deleteGistLocal,
-  getSetting,
-  saveGistWithFiles,
-  type GistRecord,
-} from '../lib/db';
+import { db, deleteGistLocal, getSetting, saveGistWithFiles, type GistRecord } from '../lib/db';
 import {
   createGist,
   deleteGist,
@@ -52,22 +46,12 @@ export interface MainScreenProps extends Omit<AccountFooterProps, 'onOpenSearch'
  * (selection + which view); data loading and writes are delegated to the
  * `render*` props.
  */
-export function MainScreen({
-  gists,
-  syncError,
-  renderDetail,
-  renderCreate,
-  renderEdit,
-  ...account
-}: MainScreenProps) {
+export function MainScreen({ gists, syncError, renderDetail, renderCreate, renderEdit, ...account }: MainScreenProps) {
   const [selectedGistId, setSelectedGistId] = useState<string | null>(null);
   const [view, setView] = useState<MainView>('detail');
   const [isPaletteOpen, setIsPaletteOpen] = useState(false);
 
-  const selectedGist = useMemo(
-    () => gists?.find((g) => g.id === selectedGistId) ?? null,
-    [gists, selectedGistId],
-  );
+  const selectedGist = useMemo(() => gists?.find((g) => g.id === selectedGistId) ?? null, [gists, selectedGistId]);
 
   const handleSelectGist = (id: string) => {
     setView('detail');
@@ -124,13 +108,7 @@ export function MainScreen({
  * from the local cache; a newer revision is only fetched in the background when
  * the gist's `updatedAt` shows the cache is stale.
  */
-function ConnectedGistDetail({
-  gist,
-  onEdit,
-}: {
-  gist: GistRecord | null;
-  onEdit: () => void;
-}) {
+function ConnectedGistDetail({ gist, onEdit }: { gist: GistRecord | null; onEdit: () => void }) {
   const { files, isLoading, isRefreshing, error } = useGistFiles(gist);
   return (
     <GistDetail
@@ -237,9 +215,7 @@ export function MainPage() {
   );
 
   const renderEdit = useCallback(
-    (gist: GistRecord, { onClose }: { onClose: () => void }) => (
-      <ConnectedEditGist gist={gist} onClose={onClose} />
-    ),
+    (gist: GistRecord, { onClose }: { onClose: () => void }) => <ConnectedEditGist gist={gist} onClose={onClose} />,
     [],
   );
 

@@ -15,8 +15,6 @@ Gister is a local-first GitHub Gist manager: a Tauri desktop app whose UI render
 - **Icons:** react-icons.
 - **Package manager:** pnpm ONLY. Never use npm or yarn. Consult .nvmrc for Node version to run.
 
-
-
 ## 2. Development & Build Commands
 
 ```bash
@@ -30,8 +28,6 @@ pnpm run lint                   # ESLint over the whole repo
 
 - `pnpm run tauri dev` is sufficient for most UI work; use the preview gallery (below) instead of logging in.
 - GitHub login needs `VITE_GITHUB_CLIENT_ID`: copy `.env.example` to `.env` and fill it in (or enter it on the login page).
-
-
 
 ## 3. Testing Workflow
 
@@ -64,8 +60,6 @@ If you introduce automated tests, use Vitest (native Vite integration), colocate
 - **Comments/docs:** JSDoc on exported functions and non-obvious invariants only; no narration comments.
 - **ESLint scope:** `dist`, `node_modules`, and `src-tauri` are ignored; React hooks and react-refresh rules are enforced.
 
-
-
 ## 5. Security & Constraints (Boundaries)
 
 - **Never commit secrets.** `.env` is gitignored; only `.env.example` (with empty values) may be edited. The device-flow client ID is not a secret, but treat it as config, not code.
@@ -79,12 +73,10 @@ If you introduce automated tests, use Vitest (native Vite integration), colocate
   - Existing Dexie schema versions in `src/db.ts` (append-only, see above)
 - **Rendering untrusted content:** gist contents are untrusted user data. Render via React bindings or CodeMirror only; never `dangerouslySetInnerHTML` or `innerHTML`. If raw HTML rendering ever becomes necessary, sanitize with DOMPurify first.
 
-
-
 ## 6. Git, Commit, and PR Guidelines
 
 - **Branches:** `feat/<short-topic>`, `fix/<short-topic>`, `chore/<short-topic>` (kebab-case).
-- **Commits:** Conventional Commits — `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`. Imperative mood, subject <= 72 chars, body explains *why* when non-obvious. One logical change per commit.
+- **Commits:** Conventional Commits — `feat:`, `fix:`, `chore:`, `refactor:`, `docs:`, `test:`. Imperative mood, subject <= 72 chars, body explains _why_ when non-obvious. One logical change per commit.
 - **Pull requests:**
   - Title follows the same Conventional Commit format.
   - Description: short summary of what/why, plus a test plan (lint + build + which preview routes were checked).

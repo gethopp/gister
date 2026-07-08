@@ -67,25 +67,28 @@ export function GistListPanel({
           Gists
         </Heading>
         {gists && (
-          <Text type="supporting" color="secondary" as="span" style={{
-            marginTop: '3px',
-          }}>
+          <Text
+            type="supporting"
+            color="secondary"
+            as="span"
+            style={{
+              marginTop: '3px',
+            }}
+          >
             {gists.length}
           </Text>
         )}
-        {isSyncing && (
-          <span
-            className="gist-spinner"
-            role="status"
-            aria-label="Syncing gists"
-          />
-        )}
+        {isSyncing && <span className="gist-spinner" role="status" aria-label="Syncing gists" />}
         <div style={{ marginLeft: 'auto' }}>
           <Button
             label="New"
             size="sm"
             variant="secondary"
-            icon={<span aria-hidden style={{ marginBottom: 2 }}>+</span>}
+            icon={
+              <span aria-hidden style={{ marginBottom: 2 }}>
+                +
+              </span>
+            }
             onClick={onNewGist}
           />
         </div>

@@ -139,10 +139,7 @@ export function GistFormView({
   };
 
   const addFile = () => {
-    setFiles((prev) => [
-      ...prev,
-      { key: nextKey.current++, originalFilename: null, filename: '', content: '' },
-    ]);
+    setFiles((prev) => [...prev, { key: nextKey.current++, originalFilename: null, filename: '', content: '' }]);
   };
 
   const removeFile = (key: number) => {
@@ -196,10 +193,7 @@ export function GistFormView({
                 <SegmentedControlItem value="private" label="Private" />
                 <SegmentedControlItem value="public" label="Public" />
               </SegmentedControl>
-              <Badge
-                label={isPublic ? 'Public' : 'Private'}
-                variant={isPublic ? 'warning' : 'neutral'}
-              />
+              <Badge label={isPublic ? 'Public' : 'Private'} variant={isPublic ? 'warning' : 'neutral'} />
               <Text type="supporting" color="secondary" as="span">
                 {isPublic
                   ? 'Anyone can see this gist. Visibility is fixed after creation.'

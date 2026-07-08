@@ -22,10 +22,7 @@ export interface EditGistViewProps {
  * kept file sends its (possibly unchanged) content; added files are keyed by
  * their new name.
  */
-function buildFilesPatch(
-  originalFilenames: string[],
-  resultFiles: GistFormResultFile[],
-): GistFilePatch {
+function buildFilesPatch(originalFilenames: string[], resultFiles: GistFormResultFile[]): GistFilePatch {
   const patch: GistFilePatch = {};
 
   const keptOriginals = new Set(

@@ -67,10 +67,7 @@ function gistDetail(doc: GistDoc, matches: readonly FuseResultMatch[] | undefine
  * already been cached locally (opening a gist caches it), so content search
  * degrades gracefully without any extra network requests.
  */
-function createGistSearchSource(
-  gists: GistRecord[],
-  contents: GistContentRecord[],
-): SearchSource<PaletteItem> {
+function createGistSearchSource(gists: GistRecord[], contents: GistContentRecord[]): SearchSource<PaletteItem> {
   const contentById = new Map<string, string>();
   for (const record of contents) {
     const joined = record.files
@@ -124,10 +121,7 @@ function createGistSearchSource(
   ];
   const actionItems = actions.map((a) => a.item);
 
-  const toGistItem = (
-    doc: GistDoc,
-    matches?: readonly FuseResultMatch[],
-  ): PaletteItem => ({
+  const toGistItem = (doc: GistDoc, matches?: readonly FuseResultMatch[]): PaletteItem => ({
     id: doc.id,
     label: doc.title,
     auxiliaryData: {
@@ -159,8 +153,7 @@ function createGistSearchSource(
       const matchedActions = actions
         .filter(
           ({ item, keywords }) =>
-            item.label.toLowerCase().includes(lower) ||
-            keywords.some((kw) => kw.includes(lower) || lower.includes(kw)),
+            item.label.toLowerCase().includes(lower) || keywords.some((kw) => kw.includes(lower) || lower.includes(kw)),
         )
         .map(({ item }) => item);
 
@@ -268,10 +261,7 @@ export function GistCommandPalette({
 }: GistCommandPaletteProps) {
   const contents = useLiveQuery(() => db.gistContents.toArray(), []);
 
-  const source = useMemo(
-    () => createGistSearchSource(gists ?? [], contents ?? []),
-    [gists, contents],
-  );
+  const source = useMemo(() => createGistSearchSource(gists ?? [], contents ?? []), [gists, contents]);
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {

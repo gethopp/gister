@@ -111,13 +111,7 @@ export function LoginPage({ initialPhase }: LoginPageProps = {}) {
       <div style={{ width: 400 }}>
         <VStack gap={3} align="stretch">
           <VStack gap={0.5} align="center">
-            <img
-              src={gisterIcon}
-              alt="Gister"
-              width={96}
-              height={96}
-              style={{ borderRadius: 20 }}
-            />
+            <img src={gisterIcon} alt="Gister" width={96} height={96} style={{ borderRadius: 20 }} />
             <Text type="display-3" as="div">
               Gister
             </Text>
@@ -135,9 +129,12 @@ export function LoginPage({ initialPhase }: LoginPageProps = {}) {
                   <Text type="body" color="secondary" as="p">
                     Enter this code on GitHub to authorize Gister:
                   </Text>
-                  <Text type="code" style={{
-                    fontSize: '1.7rem',
-                  }}>
+                  <Text
+                    type="code"
+                    style={{
+                      fontSize: '1.7rem',
+                    }}
+                  >
                     {phase.device.user_code}
                   </Text>
                   <VStack gap={1.5} align="stretch">
@@ -155,11 +152,15 @@ export function LoginPage({ initialPhase }: LoginPageProps = {}) {
                     />
                     <Button label="Cancel" variant="ghost" onClick={cancelLogin} />
                   </VStack>
-                  <Spinner size='sm' label="Waiting for authorization…" style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    flexDirection: 'row',
-                  }} />
+                  <Spinner
+                    size="sm"
+                    label="Waiting for authorization…"
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      flexDirection: 'row',
+                    }}
+                  />
                 </VStack>
               ) : (
                 <VStack gap={3} align="stretch">

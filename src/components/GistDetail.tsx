@@ -18,10 +18,8 @@ import { gistTitle, type GistFileContent, type GistRecord } from '../lib/db';
 import { CodeView } from './CodeView';
 import { MarkdownView } from './MarkdownView';
 import { isMarkdownFilename } from './codeLanguage';
-import { HiOutlinePencil } from "react-icons/hi2";
-import { HiOutlineTrash } from "react-icons/hi2";
-
-
+import { HiOutlinePencil } from 'react-icons/hi2';
+import { HiOutlineTrash } from 'react-icons/hi2';
 
 export interface GistDetailProps {
   /** The currently opened gist, or null for the empty state. */
@@ -55,15 +53,7 @@ export interface GistDetailProps {
  * Purely presentational: file contents (and their loading state) are supplied
  * by the caller via `useGistFiles`, which serves them cache-first.
  */
-export function GistDetail({
-  gist,
-  files,
-  isLoading,
-  isRefreshing,
-  error,
-  onEdit,
-  onDelete,
-}: GistDetailProps) {
+export function GistDetail({ gist, files, isLoading, isRefreshing, error, onEdit, onDelete }: GistDetailProps) {
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -101,14 +91,10 @@ export function GistDetail({
               {gistTitle(gist)}
             </Heading>
             <HStack gap={2} align="center">
-              <Button label="Edit" icon={
-                <HiOutlinePencil size={12} />
-              } onClick={() => onEdit?.(gist)} />
+              <Button label="Edit" icon={<HiOutlinePencil size={12} />} onClick={() => onEdit?.(gist)} />
               <IconButton
                 label="Delete gist"
-                icon={
-                  <HiOutlineTrash size={12} />
-                }
+                icon={<HiOutlineTrash size={12} />}
                 variant="destructive"
                 onClick={() => {
                   setDeleteError(null);
@@ -118,15 +104,10 @@ export function GistDetail({
             </HStack>
           </HStack>
 
-          {deleteError !== null && (
-            <Banner status="error" title="Couldn't delete gist" description={deleteError} />
-          )}
+          {deleteError !== null && <Banner status="error" title="Couldn't delete gist" description={deleteError} />}
 
           <HStack gap={2} align="center">
-            <Badge
-              label={gist.isPublic ? 'Public' : '🔐 Private'}
-              variant={gist.isPublic ? 'warning' : 'neutral'}
-            />
+            <Badge label={gist.isPublic ? 'Public' : '🔐 Private'} variant={gist.isPublic ? 'warning' : 'neutral'} />
             {isRefreshing && (
               <HStack gap={1} align="center">
                 <Spinner size="sm" aria-label="Checking for a newer version" />
@@ -165,16 +146,21 @@ export function GistDetail({
               <EmptyState isCompact title="This gist has no files" />
             ) : (
               files.map((file) => (
-                <Card key={file.filename} padding={0}
-                >
+                <Card key={file.filename} padding={0}>
                   <Collapsible
                     className="gist-collapsible-trigger"
                     defaultIsOpen
                     trigger={
-                      <HStack gap={2} align="center" style={{
-                        // marginLeft: '8px',
-                        // marginTop: '4px',
-                      }}>
+                      <HStack
+                        gap={2}
+                        align="center"
+                        style={
+                          {
+                            // marginLeft: '8px',
+                            // marginTop: '4px',
+                          }
+                        }
+                      >
                         <Text type="label" as="span">
                           {file.filename}
                         </Text>

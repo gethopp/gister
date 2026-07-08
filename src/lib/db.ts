@@ -1,4 +1,4 @@
-import Dexie, { type EntityTable } from "dexie";
+import Dexie, { type EntityTable } from 'dexie';
 
 export interface GistFileMeta {
   filename: string;
@@ -56,34 +56,29 @@ interface SettingRecord {
   value: unknown;
 }
 
-export const db = new Dexie("gister") as Dexie & {
-  gists: EntityTable<GistRecord, "id">;
-  settings: EntityTable<SettingRecord, "key">;
-  gistContents: EntityTable<GistContentRecord, "id">;
+export const db = new Dexie('gister') as Dexie & {
+  gists: EntityTable<GistRecord, 'id'>;
+  settings: EntityTable<SettingRecord, 'key'>;
+  gistContents: EntityTable<GistContentRecord, 'id'>;
 };
 
 db.version(1).stores({
-  gists: "id, updatedAt",
-  settings: "key",
+  gists: 'id, updatedAt',
+  settings: 'key',
 });
 
 db.version(2).stores({
-  gists: "id, updatedAt",
-  settings: "key",
-  gistContents: "id",
+  gists: 'id, updatedAt',
+  settings: 'key',
+  gistContents: 'id',
 });
 
-export async function getSetting<K extends keyof SettingsValues>(
-  key: K,
-): Promise<SettingsValues[K] | undefined> {
+export async function getSetting<K extends keyof SettingsValues>(key: K): Promise<SettingsValues[K] | undefined> {
   const record = await db.settings.get(key);
   return record?.value as SettingsValues[K] | undefined;
 }
 
-export async function setSetting<K extends keyof SettingsValues>(
-  key: K,
-  value: SettingsValues[K],
-): Promise<void> {
+export async function setSetting<K extends keyof SettingsValues>(key: K, value: SettingsValues[K]): Promise<void> {
   await db.settings.put({ key, value });
 }
 
@@ -91,7 +86,7 @@ export async function setSetting<K extends keyof SettingsValues>(
 export function gistTitle(gist: GistRecord): string {
   const description = gist.description.trim();
   if (description) return description;
-  return gist.files[0]?.filename ?? "Untitled gist";
+  return gist.files[0]?.filename ?? 'Untitled gist';
 }
 
 /**
@@ -101,10 +96,7 @@ export function gistTitle(gist: GistRecord): string {
  * update, renamed/removed files are replaced wholesale (the content cache is
  * keyed by gist id, and `files` is the full new set).
  */
-export async function saveGistWithFiles(
-  record: GistRecord,
-  files: GistFileContent[],
-): Promise<void> {
+export async function saveGistWithFiles(record: GistRecord, files: GistFileContent[]): Promise<void> {
   await db.transaction('rw', db.gists, db.gistContents, async () => {
     await db.gists.put(record);
     await db.gistContents.put({
@@ -130,16 +122,12 @@ export function getCachedGistFiles(id: string): Promise<GistContentRecord | unde
 }
 
 /** Store freshly fetched file contents, tagged with the gist revision they match. */
-export async function saveGistFiles(
-  id: string,
-  files: GistFileContent[],
-  updatedAt: string,
-): Promise<void> {
+export async function saveGistFiles(id: string, files: GistFileContent[], updatedAt: string): Promise<void> {
   await db.gistContents.put({ id, files, updatedAt, fetchedAt: new Date().toISOString() });
 }
 
 export async function clearAllData(): Promise<void> {
-  await db.transaction("rw", db.gists, db.settings, db.gistContents, async () => {
+  await db.transaction('rw', db.gists, db.settings, db.gistContents, async () => {
     await db.gists.clear();
     await db.settings.clear();
     await db.gistContents.clear();

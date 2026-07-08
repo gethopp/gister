@@ -101,7 +101,7 @@ const mockDevice = {
   interval: 5,
 };
 
-const noop = () => { };
+const noop = () => {};
 
 /**
  * Preview stand-in for the connected detail: mimics cache-first loading. The
@@ -212,9 +212,7 @@ function MainPreview({ gists: initial, isSyncing }: { gists: GistRecord[]; isSyn
           onCancel={onClose}
           onSubmit={async (input) => {
             // Preview only: reflect the description change in local mock state.
-            setGists((prev) =>
-              prev.map((g) => (g.id === gist.id ? { ...g, description: input.description } : g)),
-            );
+            setGists((prev) => prev.map((g) => (g.id === gist.id ? { ...g, description: input.description } : g)));
             onClose();
           }}
         />
@@ -252,16 +250,9 @@ const screens: Record<string, { label: string; render: () => ReactNode }> = {
         onRefresh={noop}
         onLogout={noop}
         renderDetail={(gist, { onEdit }) => <PreviewGistDetail gist={gist} onEdit={onEdit} />}
-        renderCreate={({ onClose }) => (
-          <CreateGistView onSubmit={async () => onClose()} onCancel={() => onClose()} />
-        )}
+        renderCreate={({ onClose }) => <CreateGistView onSubmit={async () => onClose()} onCancel={() => onClose()} />}
         renderEdit={(gist, { onClose }) => (
-          <EditGistView
-            gist={gist}
-            files={filesForGist(gist)}
-            onSubmit={async () => onClose()}
-            onCancel={onClose}
-          />
+          <EditGistView gist={gist} files={filesForGist(gist)} onSubmit={async () => onClose()} onCancel={onClose} />
         )}
       />
     ),

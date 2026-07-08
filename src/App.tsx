@@ -5,9 +5,7 @@ import { MainPage } from './pages/MainPage';
 import { useAppStore } from './lib/store';
 
 // Dev-only screen gallery, kept out of production bundles via lazy import.
-const PreviewGallery = lazy(() =>
-  import('./dev/PreviewGallery').then((m) => ({ default: m.PreviewGallery })),
-);
+const PreviewGallery = lazy(() => import('./dev/PreviewGallery').then((m) => ({ default: m.PreviewGallery })));
 
 function usePreviewScreen(): string | null {
   const [hash, setHash] = useState(window.location.hash);
@@ -18,7 +16,7 @@ function usePreviewScreen(): string | null {
   }, []);
   if (!import.meta.env.DEV) return null;
   const match = /^#\/preview(?:\/([\w-]*))?$/.exec(hash);
-  return match ? (match[1] || 'login') : null;
+  return match ? match[1] || 'login' : null;
 }
 
 export default function App() {

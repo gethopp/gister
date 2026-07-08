@@ -58,27 +58,23 @@ export function AccountFooter({
       )}
 
       <Button
-        variant="secondary" label="Search" style={{ width: '100%' }} onClick={onOpenSearch}
+        variant="secondary"
+        label="Search"
+        style={{ width: '100%' }}
+        onClick={onOpenSearch}
         onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             onOpenSearch();
           }
-        }}>
-        <HStack
-          justify="start"
-          align="center"
-          gap={3}
-          padding={2}
-          tabIndex={0}
-
-        >
+        }}
+      >
+        <HStack justify="start" align="center" gap={3} padding={2} tabIndex={0}>
           <Text>Search</Text>
           <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <Kbd keys="mod+k" />
           </span>
         </HStack>
-
       </Button>
       <MetadataList columns="single" style={{ marginLeft: '8px', marginBottom: '4px' }}>
         <MetadataListItem label="Last sync">
@@ -87,13 +83,11 @@ export function AccountFooter({
       </MetadataList>
       <Item
         ref={profileRef}
-        startContent={
-          <Avatar src={profile.avatarUrl} name={profile.name ?? profile.login} size="small" />
-        }
+        startContent={<Avatar src={profile.avatarUrl} name={profile.name ?? profile.login} size="small" />}
         label={profile.name ?? profile.login}
         description={profile.email ?? 'email hidden'}
         aria-label="User profile"
-        onClick={() => { }}
+        onClick={() => {}}
         density="compact"
       />
       <Popover
