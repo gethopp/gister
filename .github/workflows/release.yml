@@ -22,6 +22,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Ensure tag matches tauri.conf.json version
+        run: |
+          version=$(jq -r '.version' src-tauri/tauri.conf.json)
+          if [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match app version v${version}"
+            exit 1
+          fi
+          echo "Tag ${GITHUB_REF_NAME} matches app version v${version}."
+
       - name: Abort if release version already exists
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

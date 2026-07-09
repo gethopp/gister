@@ -20,6 +20,9 @@ import { MarkdownView } from './MarkdownView';
 import { isMarkdownFilename } from './codeLanguage';
 import { HiOutlinePencil } from 'react-icons/hi2';
 import { HiOutlineTrash } from 'react-icons/hi2';
+import { HiLink } from 'react-icons/hi2';
+import { HiCheck } from 'react-icons/hi2';
+import { HiOutlineClipboard } from 'react-icons/hi2';
 
 export interface GistDetailProps {
   /** The currently opened gist, or null for the empty state. */
@@ -57,6 +60,8 @@ export function GistDetail({ gist, files, isLoading, isRefreshing, error, onEdit
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [isLinkCopied, setIsLinkCopied] = useState(false);
+  const [copiedFilename, setCopiedFilename] = useState<string | null>(null);
 
   if (!gist) {
     return (
@@ -82,6 +87,26 @@ export function GistDetail({ gist, files, isLoading, isRefreshing, error, onEdit
     }
   };
 
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(gist.htmlUrl);
+      setIsLinkCopied(true);
+      setTimeout(() => setIsLinkCopied(false), 1500);
+    } catch {
+      // Clipboard access can be denied; silently ignore.
+    }
+  };
+
+  const handleCopyFile = async (filename: string, content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedFilename(filename);
+      setTimeout(() => setCopiedFilename((current) => (current === filename ? null : current)), 1500);
+    } catch {
+      // Clipboard access can be denied; silently ignore.
+    }
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', minHeight: 0 }}>
       <div style={{ padding: 24, flexShrink: 0 }}>
@@ -92,6 +117,11 @@ export function GistDetail({ gist, files, isLoading, isRefreshing, error, onEdit
             </Heading>
             <HStack gap={2} align="center">
               <Button label="Edit" icon={<HiOutlinePencil size={12} />} onClick={() => onEdit?.(gist)} />
+              <IconButton
+                label={isLinkCopied ? 'Link copied' : 'Copy gist link'}
+                icon={isLinkCopied ? <HiCheck size={12} /> : <HiLink size={12} />}
+                onClick={() => void handleCopyLink()}
+              />
               <IconButton
                 label="Delete gist"
                 icon={<HiOutlineTrash size={12} />}
@@ -146,7 +176,26 @@ export function GistDetail({ gist, files, isLoading, isRefreshing, error, onEdit
               <EmptyState isCompact title="This gist has no files" />
             ) : (
               files.map((file) => (
-                <Card key={file.filename} padding={0}>
+                <Card key={file.filename} padding={0} style={{ position: 'relative' }}>
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 8,
+                      right: 36,
+                      display: 'flex',
+                      alignItems: 'center',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    <IconButton
+                      label={copiedFilename === file.filename ? 'Copied' : 'Copy file contents'}
+                      icon={copiedFilename === file.filename ? <HiCheck size={12} /> : <HiOutlineClipboard size={12} />}
+                      variant="ghost"
+                      size="sm"
+                      style={{ pointerEvents: 'auto' }}
+                      onClick={() => void handleCopyFile(file.filename, file.content)}
+                    />
+                  </div>
                   <Collapsible
                     className="gist-collapsible-trigger"
                     defaultIsOpen

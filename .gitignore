@@ -34,3 +34,5 @@ dist-ssr
 .vscode/tasks.json
 
 target/
+
+.cursor/

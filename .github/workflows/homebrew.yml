@@ -1,0 +1,21 @@
+name: Bump Homebrew cask
+
+# When a GitHub Release is published, update the Gister cask in
+# gethopp/homebrew-tap. The action recomputes both arch SHA256s from the
+# release DMGs and pushes the new version to the tap. Requires the
+# HOMEBREW_TAP_TOKEN secret: a fine-grained PAT with contents:write on
+# gethopp/homebrew-tap.
+on:
+  release:
+    types: [published]
+
+jobs:
+  bump-cask:
+    runs-on: macos-latest
+    steps:
+      - uses: dawidd6/action-homebrew-bump-cask@v3
+        with:
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          tap: gethopp/homebrew-tap
+          cask: gister
+          tag: ${{ github.ref_name }}
