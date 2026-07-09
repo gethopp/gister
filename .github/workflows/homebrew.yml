@@ -13,7 +13,7 @@ jobs:
   bump-cask:
     runs-on: macos-latest
     steps:
-      - uses: dawidd6/action-homebrew-bump-cask@v3
+      - uses: macauley/action-homebrew-bump-cask@v1
         with:
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           tap: gethopp/homebrew-tap
