@@ -8,6 +8,12 @@ name: Bump Homebrew cask
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to bump the cask to (e.g. v0.1.1)
+        required: true
+        type: string
 
 jobs:
   bump-cask:
@@ -18,4 +24,4 @@ jobs:
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
           tap: gethopp/homebrew-tap
           cask: gister
-          tag: ${{ github.ref_name }}
+          tag: ${{ inputs.tag || github.ref_name }}
