@@ -1,10 +1,10 @@
 name: Bump Homebrew cask
 
-# When a GitHub Release is published, update the Gister cask in
-# gethopp/homebrew-tap. The action recomputes both arch SHA256s from the
-# release DMGs and pushes the new version to the tap. Requires the
-# HOMEBREW_TAP_TOKEN secret: a fine-grained PAT with contents:write on
-# gethopp/homebrew-tap.
+# When a GitHub Release is published (or on manual dispatch), update the Gister
+# cask in gethopp/homebrew-tap: download both arch DMGs from the release,
+# recompute their SHA256s, and push the new version + checksums to the tap.
+# Requires the HOMEBREW_TAP_TOKEN secret: a fine-grained PAT with contents:write
+# on gethopp/homebrew-tap.
 on:
   release:
     types: [published]
@@ -17,11 +17,48 @@ on:
 
 jobs:
   bump-cask:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
-      - uses: macauley/action-homebrew-bump-cask@v1
+      - name: Resolve version
+        id: resolve
+        run: |
+          TAG="${{ inputs.tag || github.ref_name }}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Check out tap
+        uses: actions/checkout@v4
         with:
+          repository: gethopp/homebrew-tap
           token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
-          tap: gethopp/homebrew-tap
-          cask: gister
-          tag: ${{ inputs.tag || github.ref_name }}
+
+      - name: Recompute checksums and update cask
+        env:
+          TAG: ${{ steps.resolve.outputs.tag }}
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          set -euo pipefail
+          base="https://github.com/gethopp/gister/releases/download/${TAG}"
+          curl -fsSL -o arm.dmg "${base}/Gister_${VERSION}_aarch64.dmg"
+          curl -fsSL -o intel.dmg "${base}/Gister_${VERSION}_x64.dmg"
+          arm_sha=$(sha256sum arm.dmg | awk '{print $1}')
+          intel_sha=$(sha256sum intel.dmg | awk '{print $1}')
+          rm -f arm.dmg intel.dmg
+          sed -i -E "s|^(  version \").*(\")|\1${VERSION}\2|" Casks/gister.rb
+          sed -i -E "s|^(  sha256 arm:[[:space:]]*\").*(\",)|\1${arm_sha}\2|" Casks/gister.rb
+          sed -i -E "s|^([[:space:]]*intel:[[:space:]]*\").*(\")|\1${intel_sha}\2|" Casks/gister.rb
+
+      - name: Commit and push
+        env:
+          VERSION: ${{ steps.resolve.outputs.version }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "Cask already up to date for ${VERSION}; nothing to do."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/gister.rb
+          git commit -m "gister ${VERSION}"
+          git push
