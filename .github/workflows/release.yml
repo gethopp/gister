@@ -13,7 +13,32 @@ permissions:
   contents: write
 
 jobs:
+  # Guard against re-releasing an existing version. Reads the Tauri version from
+  # src-tauri/tauri.conf.json and aborts before any build if a GitHub Release
+  # (including drafts) already matches that version, saving CI time on mistaken
+  # or duplicate tag pushes.
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Abort if release version already exists
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(jq -r '.version' src-tauri/tauri.conf.json)
+          target="v${version}"
+          echo "Tauri version: ${version} (target tag: ${target})"
+
+          existing=$(gh release list --repo "$GITHUB_REPOSITORY" --limit 200 --json tagName --jq '.[].tagName')
+          if printf '%s\n' "$existing" | grep -qxE "${version}|${target}"; then
+            echo "::error::A release for ${target} already exists. Skipping to avoid a duplicate/mistaken release."
+            exit 1
+          fi
+          echo "No existing release matches ${target}. Proceeding."
+
   changelog:
+    needs: preflight
     runs-on: ubuntu-latest
     outputs:
       notes: ${{ steps.collect.outputs.notes }}
