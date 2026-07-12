@@ -10,10 +10,14 @@ export interface UpdaterController {
   install: () => Promise<void>;
 }
 
+/** How often to poll GitHub Releases for a newer signed build. */
+const UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000;
+
 /**
- * Checks GitHub Releases for a newer signed build once on startup. No-ops
- * outside Tauri (browser dev, preview gallery) and never throws into the UI —
- * a failed check just leaves `isUpdateAvailable` false.
+ * Checks GitHub Releases for a newer signed build on startup and every 30
+ * minutes thereafter. No-ops outside Tauri (browser dev, preview gallery) and
+ * never throws into the UI — a failed check just leaves `isUpdateAvailable`
+ * false.
  */
 export function useUpdater(): UpdaterController {
   const [isUpdateAvailable, setIsUpdateAvailable] = useState(false);
@@ -22,7 +26,7 @@ export function useUpdater(): UpdaterController {
   useEffect(() => {
     if (!isTauri()) return;
     let isCancelled = false;
-    void (async () => {
+    const runCheck = async () => {
       try {
         const update = await check();
         if (isCancelled || !update) return;
@@ -31,9 +35,12 @@ export function useUpdater(): UpdaterController {
       } catch (err) {
         console.error('Update check failed', err);
       }
-    })();
+    };
+    runCheck();
+    const intervalId = setInterval(() => runCheck(), UPDATE_CHECK_INTERVAL_MS);
     return () => {
       isCancelled = true;
+      clearInterval(intervalId);
     };
   }, []);
 

@@ -3,6 +3,15 @@
   "private": true,
   "version": "0.1.1",
   "type": "module",
+  "license": "MIT",
+  "author": "GETHOPP LTD",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gethopp/gister"
+  },
+  "bugs": {
+    "url": "https://github.com/gethopp/gister/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
