@@ -2,8 +2,10 @@
     <img src="./src-tauri/icons/GisterIcon.png" alt="Gister Icon" width="100">
 </p>
 
-[![License](https://img.shields.io/github/license/gethopp/gister)](https://github.com/gethopp/gister/blob/main/LICENSE.md)
-[![Pairing with Hopp](https://gethopp.app/git/hopp-shield.svg?ref=gister-repo)](https://gethopp.app)
+<p align="center">
+    <img src="https://img.shields.io/github/license/gethopp/gister" />
+    <img src="https://gethopp.app/git/hopp-shield.svg?ref=gister-repo" />
+</p>
 
 <h2 align="center" style="margin-top:-20px">Gister</h2>
 
@@ -51,6 +53,22 @@ Some extra noteworthy libraries:
 - [rmcp](https://github.com/modelcontextprotocol/rust-sdk), the official Rust MCP SDK, runs a full MCP server inside the app
 - [axum](https://github.com/tokio-rs/axum) and [tokio](https://tokio.rs) serve it over streamable HTTP at `127.0.0.1:1996/mcp`, so your agents can list, search, read, create, and edit gists while Gister is open
 
+## MCP tools
+
+While Gister is running, agents can call these tools over the MCP server:
+
+| Tool               | Description                                                                                            |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| `list_gists`       | Lists your gists, most recently updated first. Metadata only, no file contents.                        |
+| `search_gists`     | Fuzzy-searches your gists by description and filename, and returns the matches.                        |
+| `read_gist`        | Reads a single gist by id, including the full text of every file.                                      |
+| `create_gist`      | Creates a gist with one or more files. Description is optional; public or secret is fixed at creation. |
+| `update_gist`      | Updates a gist's description, or edits, renames, adds, and deletes its files.                          |
+| `delete_gist`      | Deletes a gist by id, permanently.                                                                     |
+| `get_gist_url`     | Returns the public web URL of a gist by id.                                                            |
+| `get_current_user` | Returns the signed-in GitHub user's profile (login, name, email).                                      |
+| `sync_gists`       | Runs a background sync with GitHub to refresh the local cache.                                         |
+
 ## Roadmap
 
 Feel free to tackle any points from the ones below if you are up for it!
@@ -66,7 +84,7 @@ Or if you find any bug or have any feature requests, please feel free to open an
 
 At Hopp, we are building high quality OSS tools to help developers build better software. Some of our projects include:
 
-1. Hopp - The best OSS pair-programming app for developers (macOS and Windows)
+1. [Hopp](https://github.com/gethopp/hopp) - The best OSS pair-programming app for developers (macOS and Windows)
 2. [Figma-mcp-brigde](https://github.com/gethopp/figma-mcp-bridge) - Figma Plugin + MCP server that streams live Figma document data to AI tools without hitting Figma API rate limits
 3. [Gister](https://github.com/gethopp/gister) - OSS code snippet manager for developers
 
